@@ -71,6 +71,24 @@ class App extends Component {
         i=i+1;
       }
   }
+  getControlComponent(){
+    return [
+        <a key="1" href="/create">create</a>,
+        <a key="2" href="/update">update</a>,
+        <input key="3" type="button" href="/delete" onClick={function(){
+            var newContents=this.state.contents.filter(function(el){
+              if(el.id !== this.state.selected_content_id){
+                return el;
+              }
+            }.bind(this));
+            this.setState({
+              contents:newContents,
+              mode:'welcome'
+            })
+        }.bind(this)} value="delete"></input>,
+    ];
+  }
+
   getContentComponent() {
     if(this.state.mode === 'read'){
       return <Content data={this.getSelectedContent()}> </Content>
@@ -92,6 +110,7 @@ class App extends Component {
             mode:'read'
           })
         }.bind(this)} data={this.state.contents}></TOC>
+        {this.getControlComponent()}
         {this.getContentComponent()}
       </div>
     );
