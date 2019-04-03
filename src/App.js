@@ -53,6 +53,7 @@ class Content extends Component {
 
 class App extends Component {
   state={
+    mode:'read',
     selected_content_id:2,
     contents:[
         {id:1, title:'HTML', desc:'HTML is for info'},
@@ -70,17 +71,28 @@ class App extends Component {
         i=i+1;
       }
   }
+  getContentComponent() {
+    if(this.state.mode === 'read'){
+      return <Content data={this.getSelectedContent()}> </Content>
+    }
+    else if(this.state.mode === 'welcome'){
+      return <Content data={{
+        title:'Welcome',
+        desc:'Hello, React!!!'
+      }}> </Content>
+    }
+  }
   render() {
     return (
       <div className="App"> 
         <Subject title="React" sub="Hello, React."></Subject>
         <TOC onSelect={function(id){
           this.setState({
-            selected_content_id:id
+            selected_content_id:id,
+            mode:'read'
           })
-        }.bind(this)}
-        data={this.state.contents}></TOC>
-        <Content data={this.getSelectedContent()}> </Content>
+        }.bind(this)} data={this.state.contents}></TOC>
+        {this.getContentComponent()}
       </div>
     );
   }
