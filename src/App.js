@@ -50,11 +50,36 @@ class Content extends Component {
 
 }
 
+class ContentCreate extends Component {
+  state = {
+    title:'',
+    desc:''
+  }
+  changeForHandler(ev){
+    this.setState({[ev.target.name]:ev.target.value})
+  }
+  render(){
+    return (
+      <article>
+        <form onSubmit={function(ev){
+          ev.preventDefault();
+          this.props.onSubmit(this.state);
+        }.bind(this)}>
+          <p><input type="text" placeholder="title" name="title" value={this.state.title} onChange={this.changeForHandler.bind(this)}></input></p>
+          <p><textarea placeholder="description" name="desc" value={this.state.desc} onChange={this.changeForHandler.bind(this)}></textarea></p>
+          <p><input type="submit"></input></p>
+        </form>
+      </article>
+    );
+  }
+}
+
 
 class App extends Component {
+  last_content_id=3;
   state={
     mode:'read',
-    selected_content_id:2,
+    selected_content_id:3,
     contents:[
         {id:1, title:'HTML', desc:'HTML is for info'},
         {id:2, title:'CSS', desc:'CSS is for Design'},
@@ -73,8 +98,13 @@ class App extends Component {
   }
   getControlComponent(){
     return [
-        <a key="1" href="/create">create</a>,
-        <a key="2" href="/update">update</a>,
+        <a key="1" href="/create" onClick={function(ev){
+          ev.preventDefault();
+          this.setState({mode:'create'});
+        }.bind(this)}>create</a>,
+        <a key="2" href="/update" onClick={function(ev){
+          ev.preventDefault();
+        }.bind(this)}>update</a>,
         <input key="3" type="button" href="/delete" onClick={function(){
             var newContents=this.state.contents.filter(function(el){
               if(el.id !== this.state.selected_content_id){
@@ -98,6 +128,19 @@ class App extends Component {
         title:'Welcome',
         desc:'Hello, React!!!'
       }}> </Content>
+    }
+    else if(this.state.mode === 'create'){
+      return <ContentCreate onSubmit={function(formData){
+        this.last_content_id=this.last_content_id+1;
+        formData.id=this.last_content_id;
+        var newContents=Object.assign([],this.state.contents)
+        newContents.push(formData);
+        this.setState({
+          contents:newContents,
+          selected_content_id: this.last_content_id,
+          mode:'read'
+        });
+      }.bind(this)}></ContentCreate>
     }
   }
   render() {
