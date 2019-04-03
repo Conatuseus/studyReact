@@ -17,7 +17,14 @@ class TOC extends Component{
     var i=0;
     while(i<this.props.data.length){
       var data=this.props.data[i];
-      list.push(<li><a href='1.HTML'>{data.title}</a></li>)
+      list.push(
+      <li key={data.id}>
+        <a href={data.id+'.HTML'} onClick={function(ev){
+            ev.preventDefault();
+        }}>
+          {data.title}</a>
+      </li>
+      );
       i = i+1;
     }
     return (
