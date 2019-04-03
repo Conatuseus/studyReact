@@ -19,9 +19,10 @@ class TOC extends Component{
       var data=this.props.data[i];
       list.push(
       <li key={data.id}>
-        <a href={data.id+'.HTML'} onClick={function(ev){
-            ev.preventDefault();
-        }}>
+        <a href={data.id+'.HTML'} onClick={function(id, ev){
+          ev.preventDefault();
+          this.props.onSelect(id);
+        }.bind(this, data.id)}>
           {data.title}</a>
       </li>
       );
@@ -41,8 +42,8 @@ class Content extends Component {
   render(){
       return (
           <article>
-            <h2>{this.props.title}</h2>
-            {this.props.desc}
+            <h2>{this.props.data.title}</h2>
+            {this.props.data.desc}
           </article>
       );
   }
@@ -52,20 +53,34 @@ class Content extends Component {
 
 class App extends Component {
   state={
+    selected_content_id:2,
     contents:[
         {id:1, title:'HTML', desc:'HTML is for info'},
         {id:2, title:'CSS', desc:'CSS is for Design'},
         {id:3, title:'JAVASCRIPT', desc:'JAVASCRIPT is for interactive'}
     ]
   }
+  getSelectedContent(){
+      var i=0;
+      while(i < this.state.contents.length){
+        var data = this.state.contents[i];
+        if( data.id == this.state.selected_content_id){
+            return data;
+        }
+        i=i+1;
+      }
+  }
   render() {
     return (
       <div className="App"> 
-        
         <Subject title="React" sub="Hello, React."></Subject>
-        <TOC data={this.state.contents}></TOC>
-        <Content title="HTML" desc="HTML is for info"> </Content>
-        <Content title="CSS" desc="CSS is for look"> </Content>
+        <TOC onSelect={function(id){
+          this.setState({
+            selected_content_id:id
+          })
+        }.bind(this)}
+        data={this.state.contents}></TOC>
+        <Content data={this.getSelectedContent()}> </Content>
       </div>
     );
   }
