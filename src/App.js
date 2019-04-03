@@ -13,12 +13,17 @@ class Subject extends Component{
 
 class TOC extends Component{
   render(){
+    var list=[];
+    var i=0;
+    while(i<this.props.data.length){
+      var data=this.props.data[i];
+      list.push(<li><a href='1.HTML'>{data.title}</a></li>)
+      i = i+1;
+    }
     return (
       <nav>
         <ol>
-          <li><a href="1.HTML"> HTML</a></li>
-          <li><a href="2.CSS"> CSS </a></li>
-          <li><a href="3.JAVASCRIPT"> JAVASCRIPT</a></li>
+          {list}
         </ol>
       </nav>
     );
@@ -39,12 +44,19 @@ class Content extends Component {
 
 
 class App extends Component {
+  state={
+    contents:[
+        {id:1, title:'HTML', desc:'HTML is for info'},
+        {id:2, title:'CSS', desc:'CSS is for Design'},
+        {id:3, title:'JAVASCRIPT', desc:'JAVASCRIPT is for interactive'}
+    ]
+  }
   render() {
     return (
       <div className="App"> 
         
         <Subject title="React" sub="Hello, React."></Subject>
-        <TOC></TOC>
+        <TOC data={this.state.contents}></TOC>
         <Content title="HTML" desc="HTML is for info"> </Content>
         <Content title="CSS" desc="CSS is for look"> </Content>
       </div>
